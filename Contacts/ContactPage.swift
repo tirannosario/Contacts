@@ -32,11 +32,11 @@ struct ContactPage: View {
                 }
                 HStack {
                     Text("Cellular:").foregroundColor(Color.gray)
-                    Text(person.cellular)
+                    Link(person.cellular, destination: URL(string: "tel:\(person.cellular)")!)
                 }
                 HStack {
                     Text("Email:").foregroundColor(Color.gray)
-                    Text(person.email)
+                    Link(person.email, destination: URL(string: "mailto:\(person.email)")!)
                 }
                 HStack {
                     Spacer()
