@@ -10,6 +10,7 @@ import SwiftUI
 struct ContentView: View {
     @ObservedObject var model: Model
     @State private var filterFavorite = false
+    @State private var isShowingCreatePage = false
     
     var filteredList: [Person] {
         model.contacts.filter {!filterFavorite || $0.favorite}
@@ -21,11 +22,13 @@ struct ContentView: View {
                 GeometryReader { geometry in
                     HStack() {
                         Button {
-                            print("Add Contact Clicked")
-                        } label: {
+                            isShowingCreatePage = true
+                        }
+                        label: {
                             Image(systemName: "plus")
-                        }.font(Font.title)
-                            .foregroundColor(Color.indigo)
+                        }
+                        .font(Font.title)
+                        .foregroundColor(Color.indigo)
                         .frame(width: geometry.size.width * 0.10)
                         
                         Spacer().frame(width: geometry.size.width * 0.70)
@@ -40,9 +43,13 @@ struct ContentView: View {
                 }
             }
             .navigationTitle("My Contacts")
+            .sheet(isPresented: $isShowingCreatePage) { // per mostrare la pagina di creazione come Sheet
+                CreateContactPage(model: model)
+            }
         }
     }
 }
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

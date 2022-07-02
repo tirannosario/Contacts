@@ -14,6 +14,7 @@
 		1A49DCB1286EED2500ACEAEC /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A49DCB0286EED2500ACEAEC /* Model.swift */; };
 		1A49DCB3286EEFB100ACEAEC /* ContactRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A49DCB2286EEFB100ACEAEC /* ContactRow.swift */; };
 		1A49DCB5286EFC9600ACEAEC /* ContactPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A49DCB4286EFC9600ACEAEC /* ContactPage.swift */; };
+		1A5A73302870847800594F47 /* CreateContactPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A5A732F2870847800594F47 /* CreateContactPage.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +26,7 @@
 		1A49DCB0286EED2500ACEAEC /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		1A49DCB2286EEFB100ACEAEC /* ContactRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactRow.swift; sourceTree = "<group>"; };
 		1A49DCB4286EFC9600ACEAEC /* ContactPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactPage.swift; sourceTree = "<group>"; };
+		1A5A732F2870847800594F47 /* CreateContactPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateContactPage.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +66,7 @@
 				1A49DCB0286EED2500ACEAEC /* Model.swift */,
 				1A49DCB2286EEFB100ACEAEC /* ContactRow.swift */,
 				1A49DCB4286EFC9600ACEAEC /* ContactPage.swift */,
+				1A5A732F2870847800594F47 /* CreateContactPage.swift */,
 			);
 			path = Contacts;
 			sourceTree = "<group>";
@@ -149,6 +152,7 @@
 				1A49DCB1286EED2500ACEAEC /* Model.swift in Sources */,
 				1A49DCA5286EEA9100ACEAEC /* ContentView.swift in Sources */,
 				1A49DCA3286EEA9100ACEAEC /* ContactsApp.swift in Sources */,
+				1A5A73302870847800594F47 /* CreateContactPage.swift in Sources */,
 				1A49DCB5286EFC9600ACEAEC /* ContactPage.swift in Sources */,
 				1A49DCB3286EEFB100ACEAEC /* ContactRow.swift in Sources */,
 			);

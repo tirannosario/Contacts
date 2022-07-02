@@ -60,4 +60,8 @@ class Model: ObservableObject {
             }
         }
     }
+    
+    func addPerson(person: Person) {
+        contacts.append(person)
+    }
 }
