@@ -21,7 +21,7 @@ struct CreateContactPage: View {
     
     var body: some View {
         VStack {
-            Text("Create Contact").bold().font(Font.title).padding(15)
+            Text("Create Contact").font(Font.title2).padding(15)
             Form {
                 HStack {
                     Spacer()
