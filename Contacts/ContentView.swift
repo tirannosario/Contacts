@@ -24,7 +24,6 @@ struct ContentView: View {
                     ProgressView().onAppear(perform: {
                         DispatchQueue.main.async {
                             self.model.popolateFromJSONAPI(isFetching: &isFetching)
-                            
                         }
                     }
                     )
@@ -68,6 +67,8 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView(model: Model())
+        let model = Model()
+        model.mockInit()
+        return ContentView(model: model)
     }
 }

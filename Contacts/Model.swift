@@ -75,6 +75,12 @@ class Model: ObservableObject {
     @Published var contacts: [Person] = []
     
     init () {
+//        contacts.append(Person(name: "Mario", surname: "Rossi", cellular: "3315674326", email: "mariorossi@gmail.com", photo: nil, favorite: false))
+//        contacts.append(Person(name: "Luca", surname: "Verdi", cellular: "3214567892", email: "verdone@gmail.com", photo: nil, favorite: true))
+//        contacts.append(Person(name: "Elon", surname: "Musk", cellular: "3459876547", email: "tothemoon@gmail.com", photo: nil, favorite: true))
+    }
+    
+    func mockInit () {
         contacts.append(Person(name: "Mario", surname: "Rossi", cellular: "3315674326", email: "mariorossi@gmail.com", photo: nil, favorite: false))
         contacts.append(Person(name: "Luca", surname: "Verdi", cellular: "3214567892", email: "verdone@gmail.com", photo: nil, favorite: true))
         contacts.append(Person(name: "Elon", surname: "Musk", cellular: "3459876547", email: "tothemoon@gmail.com", photo: nil, favorite: true))

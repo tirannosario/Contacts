@@ -25,7 +25,7 @@ struct CreateContactPage: View {
             Form {
                 HStack {
                     Spacer()
-                    Image("abbey_road_beatles").resizable()
+                    Image("placeholder_pic").resizable()
                     .aspectRatio(contentMode: .fit)
                     .cornerRadius(60.0).frame(width: 100, height: 100, alignment: .top)
                     .padding(.vertical, 20)
@@ -68,6 +68,8 @@ struct CreateContactPage: View {
 
 struct CreateContactPage_Previews: PreviewProvider {
     static var previews: some View {
-        CreateContactPage(model: Model())
+        let model = Model()
+        model.mockInit()
+        return CreateContactPage(model: model)
     }
 }

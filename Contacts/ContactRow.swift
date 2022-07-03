@@ -27,6 +27,8 @@ struct ContactRow: View {
 
 struct ContactRow_Previews: PreviewProvider {
     static var previews: some View {
-        ContactRow(model: Model(), person: Model().contacts[1])
+        let model = Model()
+        model.mockInit()
+        return ContactRow(model: model, person: model.contacts[1])
     }
 }

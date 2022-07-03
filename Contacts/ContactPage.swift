@@ -16,10 +16,33 @@ struct ContactPage: View {
             List {
                 HStack {
                     Spacer()
-                    Image("abbey_road_beatles").resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .cornerRadius(60.0).frame(width: 100, height: 100, alignment: .top)
-                    .padding(.vertical, 20)
+                    if let picUser = person.photo {
+                        AsyncImage(url: URL(string: picUser)) {
+                            phase in
+                                switch phase {
+                                case .empty:
+                                    showDefaultPic()
+                                case .success(let image):
+                                    image.resizable()
+                                         .aspectRatio(contentMode: .fit)
+                                         .cornerRadius(60.0)
+                                         .frame(width: 100, height: 100, alignment: .top)
+                                         .padding(.vertical, 20)
+                                case .failure:
+                                    showDefaultPic()
+                                @unknown default:
+                                    // Since the AsyncImagePhase enum isn't frozen,
+                                    // we need to add this currently unused fallback
+                                    // to handle any new cases that might be added
+                                    // in the future:
+                                    EmptyView()
+                                }
+                        }
+                    }
+                    else {
+                        showDefaultPic()
+                    }
+                    
                     Spacer()
                 }
                 HStack {
@@ -66,6 +89,16 @@ struct ContactPage: View {
 
 struct ContactPage_Previews: PreviewProvider {
     static var previews: some View {
-        ContactPage(model: Model(), person: Model().contacts[0])
+        let model = Model()
+        model.mockInit()
+        return ContactPage(model: model, person: model.contacts[0])
     }
+}
+
+
+func showDefaultPic() -> some View {
+    return Image("placeholder_pic").resizable()
+    .aspectRatio(contentMode: .fit)
+    .cornerRadius(60.0).frame(width: 100, height: 100, alignment: .top)
+    .padding(.vertical, 20)
 }
