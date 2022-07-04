@@ -23,7 +23,7 @@ struct ContentView: View {
                 VStack {
                     ProgressView().onAppear(perform: {
                         DispatchQueue.main.async {
-                            self.model.popolateFromJSONAPI(isFetching: &isFetching)
+                            self.model.loadData(isFetching: &isFetching)
                         }
                     }
                     )
@@ -43,10 +43,22 @@ struct ContentView: View {
                             .foregroundColor(Color.indigo)
                             .frame(width: geometry.size.width * 0.10)
                             
-                            Spacer().frame(width: geometry.size.width * 0.70)
+                            Spacer().frame(width: geometry.size.width * 0.50)
                             
                             Toggle(isOn: $filterFavorite) {Image(systemName: "star.fill").foregroundColor(Color.yellow)}
                                 .frame(width: geometry.size.width * 0.20)
+                            
+                            Spacer().frame(width: geometry.size.width * 0.10)
+                            
+                            Button {
+                                self.model.updateLocalWithRemote(isFetching: &isFetching)
+                            }
+                            label: {
+                                Image(systemName: "icloud.and.arrow.down")
+                            }
+                            .font(Font.title)
+                            .foregroundColor(Color.indigo)
+                            .frame(width: geometry.size.width * 0.10)
                         }
                     }.frame(height: 30).padding(.horizontal, 25).padding(.vertical, 10)
                     

@@ -6,6 +6,16 @@
 //
 
 import Foundation
+import RealmSwift
+
+class LocalPerson: Object {
+    @objc dynamic var name: String?
+    @objc dynamic var surname: String?
+    @objc dynamic var cellular: String?
+    @objc dynamic var email: String?
+    @objc dynamic var photo: String?
+    @objc dynamic var favorite: Bool = false
+}
 
 class Person: Identifiable, ObservableObject, Equatable, Decodable, CustomStringConvertible {
     
@@ -86,12 +96,6 @@ class Model: ObservableObject {
         contacts.append(Person(name: "Elon", surname: "Musk", cellular: "3459876547", email: "tothemoon@gmail.com", photo: nil, favorite: true))
     }
     
-    func addContacts(contacts: [Person]) {
-        for contact in contacts {
-            addPerson(person: contact)
-        }
-    }
-    
     func getPerson(findId: UUID)-> Person? {
         if let person = contacts.first(where: {$0.id == findId}) {
             return person
@@ -103,30 +107,110 @@ class Model: ObservableObject {
         if let person = contacts.first(where: {$0.id == findId}) {
             if let index = contacts.firstIndex(of: person) {
                 contacts.remove(at: index)
+                deleteFromRealmDB(person: person)
             }
         }
     }
     
     func addPerson(person: Person) {
         contacts.append(person)
+        saveToRealmDB(person: person)
     }
     
-    func popolateFromJSONAPI(isFetching: inout Bool) {
+    func addPersonToModel(person: Person) {
+        contacts.append(person)
+    }
+    
+    func loadData(isFetching: inout Bool) {
+        let localContacts = getContactsFromRealmDB()
+        
+        for localContact in localContacts {
+            addPersonToModel(person: Person(name: localContact.name!, surname: localContact.surname!, cellular: localContact.cellular!, email: localContact.email!, photo: localContact.photo, favorite: localContact.favorite))
+        }
+        isFetching = false
+    }
+    
+    func updateLocalWithRemote(isFetching: inout Bool) {
+        var localContacts = getContactsFromRealmDB()
+        let remoteContacts = getContactsFromJSONAPI()
+        
+        for remoteContact in remoteContacts {
+            // se non abbiamo in locale il contatto remoto, lo aggiungiamo
+            //TODO usare id o qualcosa di meglio
+            if(localContacts.filter({$0.name == remoteContact.name && $0.surname == remoteContact.surname}).isEmpty) {
+                saveToRealmDB(person: remoteContact)
+            }
+        }
+        
+        localContacts = getContactsFromRealmDB()
+        self.contacts.removeAll()
+        for localContact in localContacts {
+            addPersonToModel(person: Person(name: localContact.name!, surname: localContact.surname!, cellular: localContact.cellular!, email: localContact.email!, photo: localContact.photo, favorite: localContact.favorite))
+        }
+        isFetching = false
+    }
+    
+    func getPersonFromRealmDB(person: Person) -> LocalPerson? {
+        let realm = try! Realm.init()
+        let results = realm.objects(LocalPerson.self).filter({$0.name == person.name && $0.surname == person.surname})
+        if(results.isEmpty) {
+            return nil
+        }
+        else {
+            let foundPerson = Array(results)[0]
+            return foundPerson
+        }
+    }
+    
+    func saveToRealmDB(person: Person) {
+        // salviamo nel db locale
+        let realm = try! Realm.init()
+        let userToSave = LocalPerson.init()
+        userToSave.name = person.name
+        userToSave.surname = person.surname
+        userToSave.cellular = person.cellular
+        userToSave.email = person.email
+        userToSave.photo = person.photo
+        userToSave.favorite = person.favorite
+        try! realm.write({
+            realm.add(userToSave)
+        })
+    }
+    
+    func deleteFromRealmDB(person: Person) {
+        let realm = try! Realm.init()
+        let personToDelete = getPersonFromRealmDB(person: person)
+        if(personToDelete != nil) {
+            try! realm.write({
+                realm.delete(personToDelete!)
+            })
+        }
+    }
+    
+    func getContactsFromJSONAPI() -> [Person] {
+        let result = [Person]()
+        
         let apiEndpoint = "https://my-json-server.typicode.com/tirannosario/demo/contacts"
         guard let url = URL(string: apiEndpoint) else {
             print("bad URL")
-            return
+            return result
         }
         
         if let data = try? Data(contentsOf: url) {
             do {
                 // Parse the JSON data
                 let fetchedContacts = try JSONDecoder().decode([Person].self, from: data)
-                addContacts(contacts: fetchedContacts)
-                isFetching = false
+                return fetchedContacts
             } catch {
                 print(error)
             }
         }
+        return result
+    }
+    
+    func getContactsFromRealmDB() -> [LocalPerson] {
+        let realm = try! Realm.init()
+        let results = realm.objects(LocalPerson.self)
+        return Array(results)
     }
 }
