@@ -14,7 +14,7 @@ struct ContentView: View {
     @State private var isFetching = true
     
     var filteredList: [Person] {
-        model.contacts.filter {!filterFavorite || $0.favorite}
+        model.contacts.filter {!filterFavorite || $0.favorite}.sorted(by: {$0.name < $1.name})
     }
     
     var body: some View {
