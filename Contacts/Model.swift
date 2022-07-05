@@ -117,6 +117,11 @@ class Model: ObservableObject {
         saveToRealmDB(person: person)
     }
     
+    func setFavorite(person: Person, favorite: Bool) {
+        person.setFavorite(favorite: favorite)
+        updateRealmDB(person: person)
+    }
+    
     func addPersonToModel(person: Person) {
         contacts.append(person)
     }
@@ -185,6 +190,22 @@ class Model: ObservableObject {
                 realm.delete(personToDelete!)
             })
         }
+    }
+    
+    func updateRealmDB(person: Person){
+        let realm = try! Realm.init()
+        let personToUpdate = getPersonFromRealmDB(person: person)
+        if(personToUpdate != nil) {
+            try! realm.write({
+                personToUpdate!.name = person.name
+                personToUpdate!.surname = person.surname
+                personToUpdate!.cellular = person.cellular
+                personToUpdate!.email = person.email
+                personToUpdate!.photo = person.photo
+                personToUpdate!.favorite = person.favorite
+            })
+        }
+
     }
     
     func getContactsFromJSONAPI() -> [Person] {

@@ -64,7 +64,8 @@ struct ContactPage: View {
                 HStack {
                     Spacer()
                     Button {
-                        person.favorite = !person.favorite
+//                        person.favorite = !person.favorite
+                        model.setFavorite(person: person, favorite: !person.favorite)
                     }
                     label: {
                     Image(systemName: person.favorite ? "star.fill" : "star" ).foregroundColor(Color.yellow)
