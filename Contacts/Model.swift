@@ -13,6 +13,7 @@ class LocalPerson: Object {
     @objc dynamic var surname: String?
     @objc dynamic var cellular: String?
     @objc dynamic var email: String?
+    @objc dynamic var onlinePic: Bool = false
     @objc dynamic var photo: String?
     @objc dynamic var favorite: Bool = false
 }
@@ -24,16 +25,18 @@ class Person: Identifiable, ObservableObject, Equatable, Decodable, CustomString
     @Published var surname: String
     @Published var cellular: String
     @Published var email: String
+    @Published var onlinePic: Bool
     @Published var photo: String?
     @Published var favorite: Bool
     
-    init(id: UUID = UUID(), name: String, surname: String, cellular: String, email: String, photo: String? = nil, favorite: Bool) {
+    init(id: UUID = UUID(), name: String, surname: String, cellular: String, email: String, onlinePic: Bool, photo: String? = nil, favorite: Bool) {
         self.id = id
         self.name = name
         self.surname = surname
         self.cellular = cellular
         self.email = email
         self.photo = photo
+        self.onlinePic = onlinePic
         self.favorite = favorite
     }
     
@@ -42,6 +45,7 @@ class Person: Identifiable, ObservableObject, Equatable, Decodable, CustomString
         case surname
         case cellular
         case email
+        case onlinePic
         case photo
         case favorite
     }
@@ -54,6 +58,7 @@ class Person: Identifiable, ObservableObject, Equatable, Decodable, CustomString
         surname = try values.decode(String.self, forKey: .surname)
         cellular = try values.decode(String.self, forKey: .cellular)
         email = try values.decode(String.self, forKey: .email)
+        onlinePic = try values.decode(Bool.self, forKey: .onlinePic)
         photo = try values.decode(String.self, forKey: .photo)
         favorite = try values.decode(Bool.self, forKey: .favorite)
     }
@@ -64,6 +69,7 @@ class Person: Identifiable, ObservableObject, Equatable, Decodable, CustomString
         try container.encode(surname, forKey: .surname)
         try container.encode(cellular, forKey: .cellular)
         try container.encode(email, forKey: .email)
+        try container.encode(onlinePic, forKey: .onlinePic)
         try container.encode(photo, forKey: .photo)
         try container.encode(favorite, forKey: .favorite)
 
@@ -91,9 +97,9 @@ class Model: ObservableObject {
     }
     
     func mockInit () {
-        contacts.append(Person(name: "Mario", surname: "Rossi", cellular: "3315674326", email: "mariorossi@gmail.com", photo: nil, favorite: false))
-        contacts.append(Person(name: "Luca", surname: "Verdi", cellular: "3214567892", email: "verdone@gmail.com", photo: nil, favorite: true))
-        contacts.append(Person(name: "Elon", surname: "Musk", cellular: "3459876547", email: "tothemoon@gmail.com", photo: nil, favorite: true))
+        contacts.append(Person(name: "Mario", surname: "Rossi", cellular: "3315674326", email: "mariorossi@gmail.com", onlinePic: false, photo: nil, favorite: false))
+        contacts.append(Person(name: "Luca", surname: "Verdi", cellular: "3214567892", email: "verdone@gmail.com", onlinePic: false, photo: nil, favorite: true))
+        contacts.append(Person(name: "Elon", surname: "Musk", cellular: "3459876547", email: "tothemoon@gmail.com", onlinePic: false, photo: nil, favorite: true))
     }
     
     func getPerson(findId: UUID)-> Person? {
@@ -130,7 +136,7 @@ class Model: ObservableObject {
         let localContacts = getContactsFromRealmDB()
         
         for localContact in localContacts {
-            addPersonToModel(person: Person(name: localContact.name!, surname: localContact.surname!, cellular: localContact.cellular!, email: localContact.email!, photo: localContact.photo, favorite: localContact.favorite))
+            addPersonToModel(person: Person(name: localContact.name!, surname: localContact.surname!, cellular: localContact.cellular!, email: localContact.email!, onlinePic: localContact.onlinePic, photo: localContact.photo, favorite: localContact.favorite))
         }
         isFetching = false
     }
@@ -150,7 +156,7 @@ class Model: ObservableObject {
         localContacts = getContactsFromRealmDB()
         self.contacts.removeAll()
         for localContact in localContacts {
-            addPersonToModel(person: Person(name: localContact.name!, surname: localContact.surname!, cellular: localContact.cellular!, email: localContact.email!, photo: localContact.photo, favorite: localContact.favorite))
+            addPersonToModel(person: Person(name: localContact.name!, surname: localContact.surname!, cellular: localContact.cellular!, email: localContact.email!, onlinePic: localContact.onlinePic, photo: localContact.photo, favorite: localContact.favorite))
         }
         isFetching = false
     }
@@ -175,6 +181,7 @@ class Model: ObservableObject {
         userToSave.surname = person.surname
         userToSave.cellular = person.cellular
         userToSave.email = person.email
+        userToSave.onlinePic = person.onlinePic
         userToSave.photo = person.photo
         userToSave.favorite = person.favorite
         try! realm.write({
@@ -201,6 +208,7 @@ class Model: ObservableObject {
                 personToUpdate!.surname = person.surname
                 personToUpdate!.cellular = person.cellular
                 personToUpdate!.email = person.email
+                personToUpdate!.onlinePic = person.onlinePic
                 personToUpdate!.photo = person.photo
                 personToUpdate!.favorite = person.favorite
             })
@@ -233,5 +241,28 @@ class Model: ObservableObject {
         let realm = try! Realm.init()
         let results = realm.objects(LocalPerson.self)
         return Array(results)
+    }
+    
+    static func saveImage(name: String, surname: String, image: UIImage) -> Bool {
+        guard let data = image.jpegData(compressionQuality: 1) ?? image.pngData() else {
+               return false
+           }
+       guard let directory = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) as NSURL else {
+           return false
+       }
+       do {
+           try data.write(to: directory.appendingPathComponent("\(name)-\(surname).png")!)
+           return true
+       } catch {
+           print(error.localizedDescription)
+           return false
+       }
+    }
+    
+    static func getSavedImage(name: String, surname: String) -> UIImage? {
+        if let dir = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) {
+            return UIImage(contentsOfFile: URL(fileURLWithPath: dir.absoluteString).appendingPathComponent("\(name)-\(surname)").path)
+        }
+        return nil
     }
 }

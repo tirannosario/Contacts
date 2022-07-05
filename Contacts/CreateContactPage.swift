@@ -19,16 +19,43 @@ struct CreateContactPage: View {
     
     @Environment(\.dismiss) private var dismiss
     
+    @State private var image: UIImage? = UIImage(named:"placeholder_pic")
+    @State private var shouldPresentImagePicker = false
+    @State private var shouldPresentActionScheet = false
+    @State private var shouldPresentCamera = false
+    
     var body: some View {
         VStack {
             Text("Create Contact").font(Font.title2).padding(15)
             Form {
                 HStack {
                     Spacer()
-                    Image("placeholder_pic").resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .cornerRadius(60.0).frame(width: 100, height: 100, alignment: .top)
-                    .padding(.vertical, 20)
+                    Image(uiImage: image!)
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: 100, height: 100, alignment: .top)
+                        .cornerRadius(60.0).frame(width: 100, height: 100, alignment: .top)
+                        .padding(.vertical, 20)
+                        .onTapGesture { self.shouldPresentActionScheet = true }
+                        .sheet(isPresented: $shouldPresentImagePicker) {
+                            SUImagePickerView(sourceType: self.shouldPresentCamera ? .camera : .photoLibrary, image: self.$image, isPresented: self.$shouldPresentImagePicker)
+                    }.actionSheet(isPresented: $shouldPresentActionScheet) {
+                        ActionSheet(title: Text("Choose mode"),
+                            message: Text("Please choose your preferred mode to set your profile image"),
+                            buttons: [
+                                ActionSheet.Button.default(Text("Camera"),
+                                   action: {
+                                       self.shouldPresentImagePicker = true
+                                       self.shouldPresentCamera = true
+                                   }),
+                                ActionSheet.Button.default(Text("Photo Library"),
+                                    action: {
+                                        self.shouldPresentImagePicker = true
+                                        self.shouldPresentCamera = false
+                                    }),
+                                ActionSheet.Button.cancel()
+                            ])
+                    }
                     Spacer()
                 }
                 
@@ -52,7 +79,9 @@ struct CreateContactPage: View {
                 HStack {
                     Spacer()
                     Button {
-                        model.addPerson(person: Person(name: name, surname: surname, cellular: cellular, email: email, favorite: favorite))
+                        let isSaved = Model.saveImage(name: name, surname: surname, image: image!)
+                        let path = "\(name)-\(surname).png"
+                        model.addPerson(person: Person(name: name, surname: surname, cellular: cellular, email: email,onlinePic: false, photo: path, favorite: favorite))
                         dismiss()
                     }
                     label: {

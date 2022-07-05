@@ -15,6 +15,7 @@
 		1A49DCB3286EEFB100ACEAEC /* ContactRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A49DCB2286EEFB100ACEAEC /* ContactRow.swift */; };
 		1A49DCB5286EFC9600ACEAEC /* ContactPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A49DCB4286EFC9600ACEAEC /* ContactPage.swift */; };
 		1A5A73302870847800594F47 /* CreateContactPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A5A732F2870847800594F47 /* CreateContactPage.swift */; };
+		1AA8AB5628742DA70066C05B /* SUImagePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA8AB5528742DA70066C05B /* SUImagePickerView.swift */; };
 		ACA573BDD7F1A8659F38D906 /* Pods_Contacts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 115D17BE26B7AD225C16B379 /* Pods_Contacts.framework */; };
 /* End PBXBuildFile section */
 
@@ -30,6 +31,7 @@
 		1A49DCB2286EEFB100ACEAEC /* ContactRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactRow.swift; sourceTree = "<group>"; };
 		1A49DCB4286EFC9600ACEAEC /* ContactPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactPage.swift; sourceTree = "<group>"; };
 		1A5A732F2870847800594F47 /* CreateContactPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateContactPage.swift; sourceTree = "<group>"; };
+		1AA8AB5528742DA70066C05B /* SUImagePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SUImagePickerView.swift; sourceTree = "<group>"; };
 		F005AAA59047758EF2EF5E2A /* Pods-Contacts.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Contacts.release.xcconfig"; path = "Target Support Files/Pods-Contacts/Pods-Contacts.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -72,6 +74,7 @@
 				1A49DCB2286EEFB100ACEAEC /* ContactRow.swift */,
 				1A49DCB4286EFC9600ACEAEC /* ContactPage.swift */,
 				1A5A732F2870847800594F47 /* CreateContactPage.swift */,
+				1AA8AB5528742DA70066C05B /* SUImagePickerView.swift */,
 				1A49DCA6286EEA9300ACEAEC /* Assets.xcassets */,
 				1A49DCA8286EEA9300ACEAEC /* Preview Content */,
 			);
@@ -100,7 +103,6 @@
 				0C6AE7FD8E2EADACC5071AFF /* Pods-Contacts.debug.xcconfig */,
 				F005AAA59047758EF2EF5E2A /* Pods-Contacts.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -221,6 +223,7 @@
 				1A49DCB1286EED2500ACEAEC /* Model.swift in Sources */,
 				1A49DCA5286EEA9100ACEAEC /* ContentView.swift in Sources */,
 				1A49DCA3286EEA9100ACEAEC /* ContactsApp.swift in Sources */,
+				1AA8AB5628742DA70066C05B /* SUImagePickerView.swift in Sources */,
 				1A5A73302870847800594F47 /* CreateContactPage.swift in Sources */,
 				1A49DCB5286EFC9600ACEAEC /* ContactPage.swift in Sources */,
 				1A49DCB3286EEFB100ACEAEC /* ContactRow.swift in Sources */,

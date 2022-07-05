@@ -17,26 +17,42 @@ struct ContactPage: View {
                 HStack {
                     Spacer()
                     if let picUser = person.photo {
-                        AsyncImage(url: URL(string: picUser)) {
-                            phase in
-                                switch phase {
-                                case .empty:
-                                    showDefaultPic()
-                                case .success(let image):
-                                    image.resizable()
-                                         .aspectRatio(contentMode: .fit)
-                                         .cornerRadius(60.0)
-                                         .frame(width: 100, height: 100, alignment: .top)
-                                         .padding(.vertical, 20)
-                                case .failure:
-                                    showDefaultPic()
-                                @unknown default:
-                                    // Since the AsyncImagePhase enum isn't frozen,
-                                    // we need to add this currently unused fallback
-                                    // to handle any new cases that might be added
-                                    // in the future:
-                                    EmptyView()
-                                }
+                        if(person.onlinePic) {
+                            AsyncImage(url: URL(string: picUser)) {
+                                phase in
+                                    switch phase {
+                                    case .empty:
+                                        showDefaultPic()
+                                    case .success(let image):
+                                        image.resizable()
+                                             .aspectRatio(contentMode: .fit)
+                                             .cornerRadius(60.0)
+                                             .frame(width: 100, height: 100, alignment: .top)
+                                             .padding(.vertical, 20)
+                                    case .failure:
+                                        showDefaultPic()
+                                    @unknown default:
+                                        // Since the AsyncImagePhase enum isn't frozen,
+                                        // we need to add this currently unused fallback
+                                        // to handle any new cases that might be added
+                                        // in the future:
+                                        EmptyView()
+                                    }
+                            }
+                        }
+                        else {
+                            let savedImage = Model.getSavedImage(name: person.name, surname: person.surname)
+                            if(savedImage != nil) {
+                                Image(uiImage: savedImage!)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: 100, height: 100, alignment: .top)
+                                    .cornerRadius(60.0).frame(width: 100, height: 100, alignment: .top)
+                                    .padding(.vertical, 20)
+                            }
+                            else {
+                                showDefaultPic()
+                            }
                         }
                     }
                     else {
