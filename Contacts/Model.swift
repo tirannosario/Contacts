@@ -243,6 +243,7 @@ class Model: ObservableObject {
         return Array(results)
     }
     
+    // salva l'img nei documenti
     static func saveImage(name: String, surname: String, image: UIImage) -> Bool {
         guard let data = image.jpegData(compressionQuality: 1) ?? image.pngData() else {
                return false

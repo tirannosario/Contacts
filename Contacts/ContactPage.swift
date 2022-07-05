@@ -18,47 +18,15 @@ struct ContactPage: View {
                     Spacer()
                     if let picUser = person.photo {
                         if(person.onlinePic) {
-                            AsyncImage(url: URL(string: picUser)) {
-                                phase in
-                                    switch phase {
-                                    case .empty:
-                                        showDefaultPic()
-                                    case .success(let image):
-                                        image.resizable()
-                                             .aspectRatio(contentMode: .fit)
-                                             .cornerRadius(60.0)
-                                             .frame(width: 100, height: 100, alignment: .top)
-                                             .padding(.vertical, 20)
-                                    case .failure:
-                                        showDefaultPic()
-                                    @unknown default:
-                                        // Since the AsyncImagePhase enum isn't frozen,
-                                        // we need to add this currently unused fallback
-                                        // to handle any new cases that might be added
-                                        // in the future:
-                                        EmptyView()
-                                    }
-                            }
+                            getOnlinePic(picUser: picUser)
                         }
                         else {
-                            let savedImage = Model.getSavedImage(name: person.name, surname: person.surname)
-                            if(savedImage != nil) {
-                                Image(uiImage: savedImage!)
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
-                                    .frame(width: 100, height: 100, alignment: .top)
-                                    .cornerRadius(60.0).frame(width: 100, height: 100, alignment: .top)
-                                    .padding(.vertical, 20)
-                            }
-                            else {
-                                showDefaultPic()
-                            }
+                            getLocalPic(person: person)
                         }
                     }
                     else {
                         showDefaultPic()
                     }
-                    
                     Spacer()
                 }
                 HStack {
@@ -112,6 +80,45 @@ struct ContactPage_Previews: PreviewProvider {
     }
 }
 
+
+func getOnlinePic(picUser: String) -> some View {
+    return AsyncImage(url: URL(string: picUser)) {
+        phase in
+            switch phase {
+            case .empty:
+                showDefaultPic()
+            case .success(let image):
+                image.resizable()
+                     .aspectRatio(contentMode: .fit)
+                     .cornerRadius(60.0)
+                     .frame(width: 100, height: 100, alignment: .top)
+                     .padding(.vertical, 20)
+            case .failure:
+                showDefaultPic()
+            @unknown default:
+                // Since the AsyncImagePhase enum isn't frozen,
+                // we need to add this currently unused fallback
+                // to handle any new cases that might be added
+                // in the future:
+                EmptyView()
+            }
+    }
+}
+
+func getLocalPic(person: Person) -> some View {
+    let savedImage = Model.getSavedImage(name: person.name, surname: person.surname)
+    if(savedImage != nil) {
+        return AnyView(Image(uiImage: savedImage!)
+            .resizable()
+            .aspectRatio(contentMode: .fill)
+            .frame(width: 100, height: 100, alignment: .top)
+            .cornerRadius(60.0).frame(width: 100, height: 100, alignment: .top)
+            .padding(.vertical, 20))
+    }
+    else {
+        return AnyView(showDefaultPic())
+    }
+}
 
 func showDefaultPic() -> some View {
     return Image("placeholder_pic").resizable()
